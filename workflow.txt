@@ -1,0 +1,159 @@
+PROJECT FLOW:
+                    START
+                      ↓
+              New user / Login?
+                 ↙       ↘
+             Register    Login
+                ↓          ↓
+        Name + Age +    Password
+        Nationality +      ↓
+        Password        Database
+                ↓          ↓
+                └──────┬───┘
+                       ↓
+              "Hello, SHIYU!"
+                       ↓
+           "What type of music
+             would you like?"
+                       ↓
+       ┌─────────────────────────────┐
+       │ Late 70s                    │
+       │ Rock & Pop                  │
+       │ Classical                   │
+       │ Late 60s                    │
+       │ Young 90s                   │
+       │ Early 2000s                 │
+       │ 2010 onwards                │
+       └─────────────────────────────┘
+                       ↓
+             Recommendation Engine
+                       ↓
+             Recommended Songs
+                       ↓
+          "Would you like another?"
+                  ↙          ↘
+                Yes           No
+                 ↓             ↓
+            New category      END
+
+
+                     MUSIC AI CHATBOT
+                           │
+              ┌────────────┴────────────┐
+              │                         │
+          VERSION 1                  VERSION 2
+        Web Prototype             AI + NLP Chatbot
+              │                         │
+              ↓                         ↓
+        Registration              Natural language
+        Login                     conversation
+        Database                  Intent detection
+        Song database             Mood detection
+        Fixed categories          Preferences
+        Recommendations           User history
+              │                         │
+              └────────────┬────────────┘
+                           ↓
+                      VERSION 3
+                ML Recommendation System
+                           │
+                           ↓
+                      VERSION 4
+                    Android App
+
+
+------------------------------------------------------------------------------------------------
+
+INFORMATION LIST:
+
+| Field            | Example    | Purpose                   |
+| ---------------- | ---------- | ------------------------- |
+| User ID          | U001       | Unique identification     |
+| Name             | SHIYU      | Personalized conversation |
+| Age              | 22         | User profiling            |
+| Nationality      | Indian     | Demographic information   |
+| Password         | ********   | Authentication            |
+| Music preference | Rock & Pop | Recommendation            |
+| Created date     | 2026-08-17 | Record management         |
+
+------------------------------------------------------------------------------------------------
+DATABASE SYSTEM:
+
+USERS
+user_id
+name
+age
+nationality
+password_hash
+created_at
+
+MUSIC_CATEGORIES
+category_id
+category_name
+
+SONGS
+song_id
+title
+artist
+year
+category_id
+
+MUSIC_CATEGORIES
+
+1 → Late 60s
+2 → Late 70s
+3 → Rock & Pop
+4 → Young 90s
+5 → Early 2000s
+6 → 2010 onwards
+7 → Classical
+
+SONGS
+
+1 | Bohemian Rhapsody | Queen | Rock & Pop
+2 | Billie Jean | Michael Jackson | Early 2000s and so on...
+------------------------------------------------------------------------------------------
+
+FUTURE ADVANCEMENT:
+
+"I want something energetic like the songs I used to listen to in college."
+NLP: intent = music_recommendation
+mood = energetic
+preference = previously_liked
+category = Rock & Pop
+
+----------------------------------------------------------------------------------------------
+FOLDER:
+
+music-ai-chatbot/
+│
+├── app.py
+│
+├── database/
+│   ├── database.py
+│   ├── schema.sql
+│   └── music_ai.db
+│
+├── chatbot/
+│   ├── chatbot.py
+│   └── intents.py
+│
+├── recommender/
+│   └── recommender.py
+│
+├── data/
+│   └── songs.csv
+│
+├── templates/
+│   ├── index.html
+│   ├── register.html
+│   ├── login.html
+│   └── chat.html
+│
+├── static/
+│   ├── css/
+│   │   └── style.css
+│   └── js/
+│       └── chatbot.js
+│
+└── requirements.txt
