@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Login - MusicAI</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
+
+</head>
+
+<body>
+
+<div class="login-container">
+
+    <div class="login-card">
+
+        <div class="logo">🎵</div>
+
+        <h1>Welcome Back</h1>
+
+        <p>Login to continue to MusicAI.</p>
+
+        <input
+            type="text"
+            id="name"
+            placeholder="Your name"
+        >
+
+        <input
+            type="password"
+            id="password"
+            placeholder="Password"
+        >
+
+        <button onclick="login()">
+            Login
+        </button>
+
+        <div id="error"></div>
+
+        <a href="{{ url_for('register') }}">
+            Create a new account
+        </a>
+
+    </div>
+
+</div>
+
+<script>
+
+async function login() {
+
+    const name =
+        document.getElementById("name").value.trim();
+
+    const password =
+        document.getElementById("password").value;
+
+    const error =
+        document.getElementById("error");
+
+    if (!name || !password) {
+
+        error.textContent =
+            "Please enter your name and password.";
+
+        return;
+    }
+
+    const response = await fetch(
+        "/login",
+        {
+            method: "POST",
+
+            headers: {
+                "Content-Type": "application/json"
+            },
+
+            body: JSON.stringify({
+                name: name,
+                password: password
+            })
+        }
+    );
+
+    const result = await response.json();
+
+    if (result.success) {
+
+        window.location.href = result.redirect;
+
+    } else {
+
+        error.textContent = result.message;
+    }
+}
+
+</script>
+
+</body>
+</html>

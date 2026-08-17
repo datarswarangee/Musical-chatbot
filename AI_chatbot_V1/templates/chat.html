@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>MusicAI Chat</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
+
+</head>
+
+<body>
+
+<div class="chat-container">
+
+    <div class="chat-header">
+
+        <span>🎵 MusicAI</span>
+
+        <a href="{{ url_for('logout') }}">
+            Logout
+        </a>
+
+    </div>
+
+
+    <div id="chat-box"
+         class="chat-box">
+
+        <div class="bot-message">
+            {{ greeting(user["name"]) if greeting else
+            "Welcome to MusicAI!" }}
+        </div>
+
+        <div class="bot-message">
+            What kind of music would you like to listen to?
+        </div>
+
+
+        <div class="category-container">
+
+            {% for category in categories %}
+
+            <button
+                class="category-button"
+                onclick="getRecommendations(
+                    '{{ category["category_name"] }}'
+                )">
+
+                {{ category["category_name"] }}
+
+            </button>
+
+            {% endfor %}
+
+        </div>
+
+    </div>
+
+</div>
+
+<script>
+
+async function getRecommendations(category) {
+
+    const chatBox =
+        document.getElementById("chat-box");
+
+    const userMessage =
+        document.createElement("div");
+
+    userMessage.className =
+        "user-message";
+
+    userMessage.textContent =
+        category;
+
+    chatBox.appendChild(userMessage);
+
+
+    const response = await fetch(
+        "/recommend",
+        {
+            method: "POST",
+
+            headers: {
+                "Content-Type": "application/json"
+            },
+
+            body: JSON.stringify({
+                category: category
+            })
+        }
+    );
+
+
+    const result = await response.json();
+
+
+    if (!result.success) {
+
+        return;
+    }
+
+
+    const botMessage =
+        document.createElement("div");
+
+    botMessage.className =
+        "bot-message";
+
+    botMessage.textContent =
+        result.message;
+
+    chatBox.appendChild(botMessage);
+
+
+    result.songs.forEach(song => {
+
+        const card =
+            document.createElement("div");
+
+        card.className =
+            "song-card";
+
+        card.innerHTML = `
+
+            <div>
+                <strong>${song.title}</strong>
+                <br>
+                <span>
+                    ${song.artist}
+                    ${song.year ? " • " + song.year : ""}
+                </span>
+            </div>
+
+            <div class="song-actions">
+
+                <button
+                    onclick="recordAction(
+                        ${song.id},
+                        'liked'
+                    )">
+
+                    ❤️
+
+                </button>
+
+                <button
+                    onclick="recordAction(
+                        ${song.id},
+                        'skipped'
+                    )">
+
+                    ✕
+
+                </button>
+
+            </div>
+
+        `;
+
+        chatBox.appendChild(card);
+
+    });
+
+}
+
+
+async function recordAction(songId, action) {
+
+    await fetch(
+        "/history",
+        {
+            method: "POST",
+
+            headers: {
+                "Content-Type": "application/json"
+            },
+
+            body: JSON.stringify({
+                song_id: songId,
+                action: action
+            })
+        }
+    );
+
+}
+
+</script>
+
+</body>
+</html>

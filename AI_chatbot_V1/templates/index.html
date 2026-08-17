@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>MusicAI</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+
+<body>
+
+<div class="page">
+
+    <div class="hero-card">
+
+        <div class="logo">🎵</div>
+
+        <h1>MusicAI</h1>
+
+        <p>
+            Your personal conversational music assistant.
+        </p>
+
+        <div class="buttons">
+
+            <a href="{{ url_for('register') }}"
+               class="primary-button">
+                Get Started
+            </a>
+
+            <a href="{{ url_for('login') }}"
+               class="secondary-button">
+                Login
+            </a>
+
+        </div>
+
+    </div>
+
+</div>
+
+</body>
+</html>
