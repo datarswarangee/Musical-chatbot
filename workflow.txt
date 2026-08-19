@@ -69,7 +69,7 @@ INFORMATION LIST:
 | Field            | Example    | Purpose                   |
 | ---------------- | ---------- | ------------------------- |
 | User ID          | U001       | Unique identification     |
-| Name             | SHIYU      | Personalized conversation |
+| Name             | XXXXXX     | Personalized conversation |
 | Age              | 22         | User profiling            |
 | Nationality      | Indian     | Demographic information   |
 | Password         | ********   | Authentication            |
