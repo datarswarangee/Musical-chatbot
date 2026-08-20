@@ -31,7 +31,6 @@ from chatbot.chatbot import (
     recommendation_message
 )
 
-
 app = Flask(__name__)
 
 app.secret_key = "music-ai-development-key"
