@@ -1,0 +1,763 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>MusicAI Chat</title>
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='css/style.css') }}"
+    >
+
+</head>
+
+
+<body>
+
+<div class="chat-container">
+
+    <!-- =====================================================
+         HEADER
+         ===================================================== -->
+
+    <div class="chat-header">
+
+        <span>🎵 MusicAI</span>
+
+        <a href="{{ url_for('logout') }}">
+            Logout
+        </a>
+
+    </div>
+
+
+    <!-- =====================================================
+         CHAT BOX
+         ===================================================== -->
+
+    <div
+        id="chat-box"
+        class="chat-box"
+    >
+
+        <!-- =================================================
+             WELCOME MESSAGE
+             ================================================= -->
+
+        <div class="bot-message">
+            {{ welcome_message }}
+        </div>
+
+
+        <!-- =================================================
+             INITIAL MUSIC QUESTION
+             ================================================= -->
+
+        <div class="bot-message">
+
+            What kind of music would you like to listen to?
+
+            <br>
+
+            Choose 60s, 70s, 80s, 90s, early 2000s,
+            2010 onwards, or type something.
+
+        </div>
+
+
+        <!-- =================================================
+             MUSIC CATEGORY BUTTONS
+             ================================================= -->
+
+        <div class="category-container">
+
+            {% for category in categories %}
+
+            <button
+                class="category-button"
+                onclick="getRecommendations('{{ category["category_name"] }}')"
+            >
+                {{ category["category_name"] }}
+            </button>
+
+            {% endfor %}
+
+        </div>
+
+
+        <!-- =================================================
+             CHAT INPUT
+             ================================================= -->
+
+        <div class="chat-input-container">
+
+            <input
+                type="text"
+                id="chat-input"
+                placeholder="Type your music preference"
+                autocomplete="off"
+            >
+
+            <button
+                onclick="sendMessage()"
+            >
+                Send
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<script>
+
+
+// ============================================================
+// GET RECOMMENDATIONS FROM CATEGORY BUTTON
+// ============================================================
+
+async function getRecommendations(category) {
+
+    const chatBox =
+        document.getElementById("chat-box");
+
+
+    // --------------------------------------------------------
+    // Display user's selected category
+    // --------------------------------------------------------
+
+    const userMessage =
+        document.createElement("div");
+
+    userMessage.className =
+        "user-message";
+
+    userMessage.textContent =
+        category;
+
+    chatBox.appendChild(
+        userMessage
+    );
+
+
+    // --------------------------------------------------------
+    // Send request to Flask
+    // --------------------------------------------------------
+
+    try {
+
+        const response =
+            await fetch(
+                "/recommend",
+                {
+                    method: "POST",
+
+                    headers: {
+                        "Content-Type":
+                            "application/json"
+                    },
+
+                    body: JSON.stringify({
+                        category: category
+                    })
+                }
+            );
+
+
+        const result =
+            await response.json();
+
+
+        // ----------------------------------------------------
+        // Handle error
+        // ----------------------------------------------------
+
+        if (!result.success) {
+
+            const errorMessage =
+                document.createElement("div");
+
+            errorMessage.className =
+                "bot-message";
+
+            errorMessage.textContent =
+                result.message ||
+                "Something went wrong.";
+
+            chatBox.appendChild(
+                errorMessage
+            );
+
+            chatBox.scrollTop =
+                chatBox.scrollHeight;
+
+            return;
+        }
+
+
+        // ----------------------------------------------------
+        // Display bot message
+        // ----------------------------------------------------
+
+        const botMessage =
+            document.createElement("div");
+
+        botMessage.className =
+            "bot-message";
+
+        botMessage.textContent =
+            result.message;
+
+        chatBox.appendChild(
+            botMessage
+        );
+
+
+        // ----------------------------------------------------
+        // Display songs
+        // ----------------------------------------------------
+
+        displaySongs(
+            result.songs,
+            chatBox
+        );
+
+
+        chatBox.scrollTop =
+            chatBox.scrollHeight;
+
+
+    } catch (error) {
+
+        console.error(
+            "Recommendation error:",
+            error
+        );
+
+
+        const errorMessage =
+            document.createElement("div");
+
+        errorMessage.className =
+            "bot-message";
+
+        errorMessage.textContent =
+            "Sorry, I couldn't connect to the server.";
+
+        chatBox.appendChild(
+            errorMessage
+        );
+
+    }
+
+}
+
+
+// ============================================================
+// DISPLAY SONG RECOMMENDATIONS
+// ============================================================
+
+function displaySongs(songs, chatBox) {
+
+    // --------------------------------------------------------
+    // No songs found
+    // --------------------------------------------------------
+
+    if (!songs || songs.length === 0) {
+
+        const noSongsMessage =
+            document.createElement("div");
+
+        noSongsMessage.className =
+            "bot-message";
+
+        noSongsMessage.textContent =
+            "I couldn't find any songs for this category.";
+
+        chatBox.appendChild(
+            noSongsMessage
+        );
+
+        return;
+    }
+
+
+    // --------------------------------------------------------
+    // Create song cards
+    // --------------------------------------------------------
+
+    songs.forEach(song => {
+
+        const card =
+            document.createElement("div");
+
+        card.className =
+            "song-card";
+
+
+        // ----------------------------------------------------
+        // YouTube link
+        // ----------------------------------------------------
+
+        let youtubeLink = "";
+
+
+        if (
+            song.link &&
+            song.link.trim() !== ""
+        ) {
+
+            youtubeLink = `
+                <div class="youtube-link">
+
+                    <a
+                        href="${song.link}"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                    >
+                        ▶ YouTube Link
+                    </a>
+
+                </div>
+            `;
+
+        } else {
+
+            youtubeLink = `
+                <div class="youtube-link no-link">
+                    YouTube link unavailable
+                </div>
+            `;
+
+        }
+
+
+        // ----------------------------------------------------
+        // Song information
+        // ----------------------------------------------------
+
+        card.innerHTML = `
+
+            <div class="song-info">
+
+                <strong>
+                    ${song.title}
+                </strong>
+
+                <br>
+
+                <span>
+
+                    ${song.artist}
+
+                    ${
+                        song.year
+                        ? " • " + song.year
+                        : ""
+                    }
+
+                </span>
+
+
+                ${
+                    song.genre
+                    ? `
+                        <br>
+
+                        <small>
+                            Genre: ${song.genre}
+                        </small>
+                    `
+                    : ""
+                }
+
+
+                ${
+                    song.mood
+                    ? `
+                        <br>
+
+                        <small>
+                            Mood: ${song.mood}
+                        </small>
+                    `
+                    : ""
+                }
+
+
+                ${youtubeLink}
+
+            </div>
+
+
+            <!-- =============================================
+                 SONG ACTIONS
+                 ============================================= -->
+
+            <div class="song-actions">
+
+                <!-- LIKE -->
+
+                <button
+                    class="like-button"
+                    onclick="recordAction(
+                        ${song.id},
+                        'liked',
+                        this
+                    )"
+                    title="Like"
+                >
+                    ❤️
+                </button>
+
+
+                <!-- SKIP -->
+
+                <button
+                    class="skip-button"
+                    onclick="recordAction(
+                        ${song.id},
+                        'skipped',
+                        this
+                    )"
+                    title="Skip"
+                >
+                    ✕
+                </button>
+
+            </div>
+
+        `;
+
+
+        chatBox.appendChild(
+            card
+        );
+
+    });
+
+}
+
+
+// ============================================================
+// RECORD LIKE / SKIP
+// ============================================================
+
+async function recordAction(
+    songId,
+    action,
+    button
+) {
+
+    try {
+
+        console.log(
+            "Saving action:",
+            songId,
+            action
+        );
+
+
+        // ----------------------------------------------------
+        // Send action to Flask
+        // ----------------------------------------------------
+
+        const response =
+            await fetch(
+                "/history",
+                {
+                    method: "POST",
+
+                    headers: {
+                        "Content-Type":
+                            "application/json"
+                    },
+
+                    body: JSON.stringify({
+
+                        song_id: songId,
+
+                        action: action
+
+                    })
+                }
+            );
+
+
+        const result =
+            await response.json();
+
+
+        console.log(
+            "History response:",
+            result
+        );
+
+
+        // ----------------------------------------------------
+        // Check server response
+        // ----------------------------------------------------
+
+        if (
+            !response.ok ||
+            !result.success
+        ) {
+
+            console.error(
+                "Could not save action:",
+                result.message
+            );
+
+            return;
+        }
+
+
+        // ====================================================
+        // LIKE SUCCESS
+        // ====================================================
+
+        if (action === "liked") {
+
+            button.textContent =
+                "❤️ Liked";
+
+            button.disabled =
+                true;
+
+            button.classList.add(
+                "liked"
+            );
+
+        }
+
+
+        // ====================================================
+        // SKIP SUCCESS
+        // ====================================================
+
+        else if (
+            action === "skipped"
+        ) {
+
+            button.textContent =
+                "Skipped";
+
+            button.disabled =
+                true;
+
+            button.classList.add(
+                "skipped"
+            );
+
+        }
+
+    } catch (error) {
+
+        console.error(
+            "History error:",
+            error
+        );
+
+    }
+
+}
+
+
+// ============================================================
+// SEND NATURAL LANGUAGE MESSAGE
+// ============================================================
+
+async function sendMessage() {
+
+    const input =
+        document.getElementById(
+            "chat-input"
+        );
+
+
+    const message =
+        input.value.trim();
+
+
+    // --------------------------------------------------------
+    // Ignore empty messages
+    // --------------------------------------------------------
+
+    if (!message) {
+        return;
+    }
+
+
+    const chatBox =
+        document.getElementById(
+            "chat-box"
+        );
+
+
+    // --------------------------------------------------------
+    // Display user's message
+    // --------------------------------------------------------
+
+    const userMessage =
+        document.createElement(
+            "div"
+        );
+
+    userMessage.className =
+        "user-message";
+
+    userMessage.textContent =
+        message;
+
+    chatBox.appendChild(
+        userMessage
+    );
+
+
+    // Clear input
+
+    input.value = "";
+
+
+    // --------------------------------------------------------
+    // Send message to Flask
+    // --------------------------------------------------------
+
+    try {
+
+        const response =
+            await fetch(
+                "/chat_message",
+                {
+                    method: "POST",
+
+                    headers: {
+                        "Content-Type":
+                            "application/json"
+                    },
+
+                    body: JSON.stringify({
+                        message: message
+                    })
+                }
+            );
+
+
+        const result =
+            await response.json();
+
+
+        // ----------------------------------------------------
+        // Bot response
+        // ----------------------------------------------------
+
+        const botMessage =
+            document.createElement(
+                "div"
+            );
+
+        botMessage.className =
+            "bot-message";
+
+        botMessage.textContent =
+            result.message ||
+            "I'm sorry, something went wrong.";
+
+        chatBox.appendChild(
+            botMessage
+        );
+
+
+        // ----------------------------------------------------
+        // Display recommendations
+        // ----------------------------------------------------
+
+        if (
+            result.success &&
+            result.detected &&
+            result.songs
+        ) {
+
+            displaySongs(
+                result.songs,
+                chatBox
+            );
+
+        }
+
+
+    } catch (error) {
+
+        const errorMessage =
+            document.createElement(
+                "div"
+            );
+
+        errorMessage.className =
+            "bot-message";
+
+        errorMessage.textContent =
+            "Sorry, I couldn't connect to the server.";
+
+        chatBox.appendChild(
+            errorMessage
+        );
+
+
+        console.error(
+            "Chat error:",
+            error
+        );
+
+    }
+
+
+    // --------------------------------------------------------
+    // Scroll to latest message
+    // --------------------------------------------------------
+
+    chatBox.scrollTop =
+        chatBox.scrollHeight;
+
+}
+
+
+// ============================================================
+// PRESS ENTER TO SEND
+// ============================================================
+
+document
+    .getElementById("chat-input")
+    .addEventListener(
+        "keypress",
+        function(event) {
+
+            if (
+                event.key === "Enter"
+            ) {
+
+                event.preventDefault();
+
+                sendMessage();
+
+            }
+
+        }
+    );
+
+
+</script>
+
+</body>
+
+</html>
