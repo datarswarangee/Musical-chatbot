@@ -8,7 +8,7 @@ The application recommends songs, provides YouTube links, and learns from users'
 
 ---
 
-## 📌 Table of Contents
+##  Table of Contents
 
 1. [Introduction](#-introduction)
 2. [Problem Statement](#-problem-statement)
@@ -52,7 +52,7 @@ Traditional browsing often requires users to search for songs individually or ap
 
 **MusicAI provides a simpler way to discover music by combining chatbot interaction, song filtering, and basic preference-based recommendations.**
 
-## 🎯 Project Objectives
+##  Project Objectives
 
 - Build a simple and user-friendly music recommendation website.
 - Allow users to select musical eras and express preferences using text.
@@ -64,7 +64,7 @@ Traditional browsing often requires users to search for songs individually or ap
 
 ---
 
-## ⚙️ How Does MusicAI Work?
+##  How Does MusicAI Work?
 
 The application follows a straightforward process.
 
@@ -102,7 +102,7 @@ flowchart TD
 
 ---
 
-## 🏗️ System Architecture
+##  System Architecture
 
 MusicAI uses a client-server architecture. This means the website shown to the user communicates with a Python application running on the server, which retrieves information from a database.
 
@@ -132,7 +132,7 @@ flowchart LR
 
 ---
 
-## 📥 Input and 📤 Output
+##  Input and Output
 
 Understanding the input and output helps explain what the application does.
 
@@ -180,7 +180,7 @@ The actual songs depend on the records available in the database.
 
 ---
 
-## ✨ Features
+##  Features
 
 ### 1. User registration and login
 
@@ -252,7 +252,7 @@ This is a rule-based scoring system rather than a trained recommendation model.
 
 ---
 
-## 🛠️ Technologies Used
+##  Technologies Used
 
 | Technology | Role in the project |
 |---|---|
@@ -268,7 +268,7 @@ This is a rule-based scoring system rather than a trained recommendation model.
 
 ---
 
-## 📁 Project Folder Structure
+##  Project Folder Structure
 
 The following is a simplified representation of the project structure. Your actual filenames may include additional files.
 
@@ -324,7 +324,7 @@ MusicAI/
 
 ---
 
-## 🗄️ Database Design
+##  Database Design
 
 MusicAI uses SQLite, a lightweight database that stores information in tables.
 
@@ -379,7 +379,7 @@ This allows the application to connect user behaviour with song information.
 
 ---
 
-## 🧠 Recommendation Logic
+##  Recommendation Logic
 
 The recommendation engine follows a simple scoring approach.
 
@@ -413,7 +413,7 @@ The system then returns the highest-ranked available recommendations.
 
 ---
 
-## 💻 Installation and Setup
+##  Installation and Setup
 
 ### Requirements
 
@@ -500,7 +500,7 @@ The exact address and port depend on your Flask configuration.
 
 ---
 
-## 🧪 Example Usage
+##  Example Usage
 
 ### Scenario 1: Category-based recommendations
 
@@ -543,7 +543,7 @@ Personalization depends on the history available and the matching rules. It does
 
 ---
 
-## ⚠️ Current Limitations
+##  Current Limitations
 
 MusicAI is a working prototype. It demonstrates the main ideas behind a personalized music recommendation system, but several parts can be improved.
 
@@ -570,7 +570,7 @@ MusicAI is a working prototype. It demonstrates the main ideas behind a personal
 
 ---
 
-## 🚀 Future Improvements
+##  Future Improvements
 
 The project can be developed gradually, starting with simple changes and progressing to more advanced AI techniques.
 
@@ -632,7 +632,7 @@ These are proposed improvements, not features already implemented in the current
 
 ---
 
-## 📊 How Will We Measure Improvement?
+## How Will We Measure Improvement?
 
 New features should be tested rather than judged only by appearance.
 
@@ -650,7 +650,7 @@ For a fair comparison, these measurements should be collected consistently and c
 
 ---
 
-## 🔒 Privacy and Responsible Use
+## Privacy and Responsible Use
 
 MusicAI stores account information and interaction history to support its functionality.
 
@@ -666,7 +666,7 @@ Before deploying it publicly:
 
 ---
 
-## 🎓 Conclusion
+## Conclusion
 
 MusicAI demonstrates how a web application can combine Python, Flask, SQLite, chatbot logic, and a recommendation engine to make music discovery easier.
 
@@ -678,7 +678,7 @@ The next major step is to improve language understanding, evaluate recommendatio
 
 ---
 
-## 👩‍💻 Project Status
+## Project Status
 
 **Current stage:** Working prototype with chatbot-based music recommendations, YouTube links, and Like/Skip feedback.
 
