@@ -29,7 +29,7 @@ The application recommends songs, provides YouTube links, and learns from users'
 
 ---
 
-## 🎧 Introduction
+## Introduction
 
 Have you ever wanted to listen to happy music, relaxing music, or songs from the 1990s but struggled to decide what to play?
 
@@ -44,7 +44,7 @@ The application searches its song database, recommends matching songs, and displ
 
 Users can also Like or Skip songs. These actions are saved in the database and can help the recommendation system learn their preferences.
 
-## 🎯 Problem Statement
+## Problem Statement
 
 Music libraries contain thousands of songs. Finding suitable music can take time, especially when users know the mood or genre they want but do not know which song to choose.
 
